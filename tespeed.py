@@ -398,17 +398,17 @@ class TeSpeed:
     # Load server list
         print_debug("Loading server list...\n")
         uri = "http://speedtest.net/speedtest-servers.php?x=" + str( time.time() )
-        request=self.GetRequest(uri)
         response=None
         try:
-            response = urllib2.urlopen(request);
+            response = urllib2.urlopen(uri);
         except (urllib2.URLError, socket.timeout), e:
             print_debug("Failed to get Speedtest.net server list.\n")
             print_result("%0.2f,%0.2f,\"%s\",\"%s\"\n" % (self.down_speed, self.up_speed, self.units, self.servers))
             sys.exit(1)
 
         # Load etree from XML data
-        servers_xml = etree.fromstring(response.read())
+        response = response.read()
+        servers_xml = etree.fromstring(response)
         servers=servers_xml.find("servers").findall("server")
         server_list=[]
 
